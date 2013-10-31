@@ -1,0 +1,27 @@
+#!/bin/sh
+# -*- sh -*-
+
+if [ "$1" = "autoconf" ]; then
+        echo yes
+        exit 0
+fi
+
+# If run with the "config"-parameter, give out information on how the
+# graphs should look.
+
+if [ "$1" = "config" ]; then
+
+        echo 'graph_title Upstream channels id assignment'
+        echo 'graph_args --base 1000 -l 0'
+        echo 'graph_vlabel channel id'
+        echo 'graph_category upc'
+        echo 'graph_info Enumeration to ID assignment of the upstream channels.'
+	wget --header "Cookie: name=session" --quiet --user="$routeruser" --password="$routerpassword" -O - http://$routerip/RgConnect.asp |grep '>Upstream Channels' -A 11 | grep Locked |sed -e "s,<[^<^>]*>,:,g" |awk -F: '{print "channel" $3 ".label channel " $3 "\nchannel" $3 ".draw LINE2\nchannel" $3 ".info Channel id for channel " $3 }'
+        exit 0
+fi
+
+# If not run with any parameters at all (or only unknown ones), do the
+# real work - i.e. display the data. Almost always this will be
+# "value" subfield for every data field.
+
+wget --header "Cookie: name=session" --quiet --user="$routeruser" --password="$routerpassword" -O - http://$routerip/RgConnect.asp |grep '>Upstream Channels' -A 11 | grep Locked |sed -e "s,<[^<^>]*>,:,g" -e "s,dB,,g" |awk -F: '{print "channel" $3 ".value " $9}'
