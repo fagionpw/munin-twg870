@@ -6,10 +6,10 @@ Simple munin scripts for graphing TWG870 cable modem channel properties
 Copy or symlink twg870_* to /etc/munin/plugins, and add some configuration 
 to /etc/munin/plugin-conf.d/munin-node:
 
- [twg870_*]
- env.routerip 192.168.0.1
- env.routeruser admin
- env.routerpassword admin
+    [twg870_*]
+    env.routerip 192.168.0.1
+    env.routeruser admin
+    env.routerpassword admin
 
 then restart munin-node.
 
